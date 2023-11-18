@@ -173,7 +173,8 @@ ALTER TABLE public.userpreferences OWNER TO postgres;
 CREATE TABLE public.users (
     userid integer NOT NULL,
     username character varying(50) NOT NULL,
-    email character varying(80) NOT NULL
+    email character varying(80) NOT NULL,
+    password character varying(80)
 );
 
 
@@ -331,7 +332,7 @@ COPY public.userpreferences (userid, interestid) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (userid, username, email) FROM stdin;
+COPY public.users (userid, username, email, password) FROM stdin;
 \.
 
 
