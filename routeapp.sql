@@ -145,10 +145,10 @@ CREATE TABLE public.restaurants (
     restaurantid integer NOT NULL,
     city integer,
     restaurantname character varying(80),
-    cuisinetype character varying(20),
     mealtype character varying(20),
     latitude character varying(50),
-    longitude character varying(50)
+    longitude character varying(50),
+    cuisinetype integer
 );
 
 
@@ -316,7 +316,67 @@ COPY public.placestovisit (placeid, city, placename, tags, latitude, longitude) 
 -- Data for Name: restaurants; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.restaurants (restaurantid, city, restaurantname, cuisinetype, mealtype, latitude, longitude) FROM stdin;
+COPY public.restaurants (restaurantid, city, restaurantname, mealtype, latitude, longitude, cuisinetype) FROM stdin;
+1	1	Yummy House	Lunch, Dinner	\N	\N	1
+2	2	Dumpling King	Lunch, Dinner	\N	\N	1
+3	3	China Tea	Lunch, Dinner	\N	\N	1
+4	4	Ming Tree Chinese Restaurant	Lunch, Dinner	\N	\N	1
+5	5	Asian Kitchen Chinese Restaurant	Lunch, Dinner	\N	\N	1
+6	6	Ha Long Bay	Lunch, Dinner	\N	\N	1
+7	7	Kim Bo Chinese Restaurant	Lunch, Dinner	\N	\N	1
+8	8	Sister Noodle House	Lunch, Dinner	\N	\N	1
+9	9	Green Tea Chinese Restaurant	Brunch, Dinner	\N	\N	1
+10	10	Timwah Dim Sum Restaurant	Brunch, Lunch	\N	\N	1
+11	11	Ginger Bistro	Lunch, Dinner	\N	\N	1
+12	12	Golden Leaf	Lunch, Dinner	\N	\N	1
+13	1	Chanko	Lunch, Dinner	\N	\N	2
+14	2	Makoto	Lunch, Dinner	\N	\N	2
+15	3	Sushi Katana	Lunch, Dinner	\N	\N	2
+16	4	Sakura Sushi & Grill	Lunch, Dinner	\N	\N	2
+17	5	Tsunami Sushi & Hibachi	Lunch, Dinner	\N	\N	2
+18	6	The Lure	Lunch, Dinner	\N	\N	2
+19	7	Siam Orchid	Lunch, Dinner	\N	\N	2
+20	8	Benihana Key West	Lunch, Dinner	\N	\N	2
+21	9	Corner-Sushi	Lunch, Dinner	\N	\N	2
+22	10	Sake House	Lunch, Dinner	\N	\N	2
+23	11	Rockn Sushi Asian Bistro	Lunch, Dinner	\N	\N	2
+24	12	Hibachi of Japan II	Lunch, Dinner	\N	\N	2
+25	1	Donatello Italian Restaurant	Lunch, Dinner	\N	\N	3
+26	2	Crust	Lunch, Dinner	\N	\N	3
+27	3	Maggianos Little Italy	Lunch, Dinner	\N	\N	3
+28	4	Tour of Italy Italian Kitchen	Lunch, Dinner	\N	\N	3
+29	5	Cafe Gibbiano	Lunch, Dinner	\N	\N	3
+30	6	Gratzzi Italian Grill	Lunch, Dinner	\N	\N	3
+31	7	Branos Italian Grill	Lunch, Dinner	\N	\N	3
+32	8	New York Pasta Garden	Lunch, Dinner	\N	\N	3
+33	9	La Strada Italian Kitchen	Lunch, Dinner	\N	\N	3
+34	10	Taverna	Lunch, Dinner	\N	\N	3
+35	11	Osteria Celli	Lunch, Dinner	\N	\N	3
+36	12	Caffe Milano	Lunch, Dinner	\N	\N	3
+37	1	Millers Ale House	Lunch, Dinner	\N	\N	4
+38	2	Grails Miami	Lunch, Dinner	\N	\N	4
+39	3	Ocean Prime	Lunch, Dinner	\N	\N	4
+40	4	Kool Beanz Cafe	Lunch, Dinner	\N	\N	4
+41	5	Shore	Lunch, Dinner	\N	\N	4
+42	6	Harold Seltzers Steakhouse	Lunch, Dinner	\N	\N	4
+43	7	Sandbar Sports Grill	Lunch, Dinner	\N	\N	4
+44	8	Blue Heaven	Lunch, Dinner	\N	\N	4
+45	9	Forgotten Tunic	Lunch, Dinner	\N	\N	4
+46	10	Restaurant Orsay	Lunch, Dinner	\N	\N	4
+47	11	KJs Steakhouse	Lunch, Dinner	\N	\N	4
+48	12	Tommy Bahama Restaurant	Lunch, Dinner	\N	\N	4
+49	1	Zekos Mediterranean Grill	Lunch, Dinner	\N	\N	8
+50	2	Strawberry Moon	Lunch, Dinner	\N	\N	8
+51	3	Kosher Grill	Lunch, Dinner	\N	\N	8
+52	4	Sahara Greek Lebanese	Lunch, Dinner	\N	\N	8
+53	5	Blue Kouzina	Lunch, Dinner	\N	\N	8
+54	6	Mios Grill and Cafe	Lunch, Dinner	\N	\N	8
+55	7	Pita Paradise	Lunch, Dinner	\N	\N	8
+56	8	Salute! On the Beach	Lunch, Dinner	\N	\N	8
+57	9	Gaufres and Goods	Lunch, Dinner	\N	\N	8
+58	10	Mandaloun	Lunch, Dinner	\N	\N	8
+59	11	Nomikis Plakka Greek Restaurant	Lunch, Dinner	\N	\N	8
+60	12	Mediterrano	Lunch, Dinner	\N	\N	8
 \.
 
 
@@ -574,6 +634,14 @@ ALTER TABLE ONLY public.placestovisit
 
 ALTER TABLE ONLY public.restaurants
     ADD CONSTRAINT restaurants_city_fkey FOREIGN KEY (city) REFERENCES public.cities(cityid);
+
+
+--
+-- Name: restaurants restaurants_cuisinetype_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.restaurants
+    ADD CONSTRAINT restaurants_cuisinetype_fkey FOREIGN KEY (cuisinetype) REFERENCES public.food(foodid);
 
 
 --
