@@ -265,6 +265,30 @@ COPY public.foodpreferences (userid, foodid) FROM stdin;
 --
 
 COPY public.hotels (hotelid, city, hotelname, rating, pricerange, latitude, longitude) FROM stdin;
+1	1	La Quinta Inn	\N	Cheap	\N	\N
+2	2	Nuvole Guest Suite	\N	Cheap	\N	\N
+3	3	Cambria Hotel Orlando Airport	\N	Cheap	\N	\N
+4	4	Country Inn & Suites	\N	Cheap	\N	\N
+5	5	Kompose Boutique	\N	Cheap	\N	\N
+6	6	La Quinta by Wyndham	\N	Cheap	\N	\N
+7	7	Motel-6	\N	Cheap	\N	\N
+8	8	Duval Inn	\N	Cheap	\N	\N
+9	9	Funny Farm	\N	Cheap	\N	\N
+10	10	Ramada by Wyndham	\N	Cheap	\N	\N
+11	11	Americas Best Value Inn	\N	Cheap	\N	\N
+12	12	Comfort Inn Naples	\N	Cheap	\N	\N
+13	1	Tampa Marriott Water Street	\N	Pricey	\N	\N
+14	2	Kimpton Anglers Hotel South Beach	\N	Pricey	\N	\N
+15	3	Waldorf Astoria Orlando	\N	Pricey	\N	\N
+16	4	Four Points by Sheraton	\N	Pricey	\N	\N
+17	5	The Ritz-Carlton	\N	Pricey	\N	\N
+18	6	Prestige Collection, Hotel Boutique	\N	Pricey	\N	\N
+19	7	Vista Del Mar	\N	Pricey	\N	\N
+20	8	The Reach Key West	\N	Pricey	\N	\N
+21	9	Hyatt Place St. Augustine Vilano Beach	\N	Pricey	\N	\N
+22	10	DoubleTree by Hilton	\N	Pricey	\N	\N
+23	11	Crowne Plaza Hotel Fort Myers	\N	Pricey	\N	\N
+24	12	The Ritz-Carlton, Naples	\N	Pricey	\N	\N
 \.
 
 
