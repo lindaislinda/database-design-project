@@ -64,7 +64,7 @@ export default function SignIn() {
       });
       console.log("Response:", response);
       
-
+      navigate("/preferences");
       if (response.ok) {
         sessionStorage.setItem("userEmail", formData.get("email"));
         navigate("/preferences");
