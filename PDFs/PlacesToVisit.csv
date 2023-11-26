@@ -1,0 +1,57 @@
+﻿placeid,city,placename,tags,latitude,longitude
+1,1,Tampa Mueseum of Art,Museum,27.9495 N,82.4630 W
+2,1,Tampa Bay History Center,Museum,27.9424 N,82.4499 W
+3,6,St. Petersburg Mueseum of History,Museum,27.77399 N,82.6306 W
+4,6,Museum of Fine Arts,Museum,27.7744 N,82.6319 W
+5,3,Orlando Museum of Art,"Museum, must-see",28.5728 N,81.3651 W
+6,3,ORANGE COUNTY REGIONAL HISTORY CENTER & HERITAGE SQUARE PARK,Museum,28.543027 N,81.377877 W
+7,3,Orlando Science Center,Museum,28.5723 N,81.3683 W
+8,2,Coral Castle Museum,"Museum, must-see",25.5007 N,80.4445 W
+9,2,Coral Gables Museum,Museum,25.7505 N,80.2603 W
+10,2,HistoryMiami Museum,Museum,25.7747 N,80.1964 W
+11,9,Lightner Mueseum,Museum,29.8909 N,81.3136 W
+12,9,Lincolnville Museum & Cultural Center,Museum,29.885597302 N,81.31502 W
+13,9,Villa Zorayda Museum,Museum,29.89158 N,81.3151 W
+14,1,Clearwater beach,"beach, must-see",27.9721 N,82.8286 W
+15,1,Davis Islands Beach,beach,27.9126 N,82.4462 W
+16,6,St. Pete beach,beach,27.7428 N,82.7505 W
+17,6,Boga ciega bay,beach,27.7927 N,82.7657 W
+18,3,Cocoa beach,"beach, must-see",28.3200 N,80.6076 W
+19,2,Miami beach,beach,25.7907 N,80.1300 W
+20,2,South Beach,"beach, must-see",25.7826 N,80.1341 W
+21,9,Ponte Vedra beach,"beach, must-see",30.2400 N,81.3853 W
+22,9,St. Augustine beach,beach,29.8446 N,81.2674 W
+23,1,Tampa theatre,"theatre, must-see",27.9504 N,82.4589 W
+24,3,Orlando amphitheater,theatre,28.5573 N,81.4379 W
+25,9,The St. Augustine amphiteatre,theatre,29.8922 N,81.3139 W
+26,9,St. Petersburg City Theatre,theatre,27.7311 N,82.6758 W
+27,2,Olympia Theatre,"theatre, must-see",25.7738 N,80.1903 W
+28,1,Temple Terrace Riverfront Park trail,hiking,28.0352964 N,82.389259 W
+29,1,Upper Tampa Bay Eagle Trail,hiking,28.014384 N,82.6397 W
+30,3,Hal Scott Preserve Yellow Blaze trail,hiking,28.482367 N,81.097168 W
+31,3,Split Oak Lake loop,hiking,28.3519435 N,81.21093 W
+32,6,Boyd Hill Natural Preserve,hiking,27.72677 N,82.6502 W
+33,6,Weedon Island Preserve,hiking,27.8476 N,82.6087 W
+34,2,Big Cypress National Preserve,hiking,26.0486 N,81.0755 W
+35,2,Everglades National Park,hiking,25.2866 N,80.8987 W
+36,9,Ancient Dunes Natural Trail,hiking,29.2108147 N,81.0228 W
+37,1,Riverwalk,"Walkable, hiking, Family, Anytime",27.56410604 N,82.27316692  W
+38,1,MOSI,"Family, Daytime, Science, Interactive, Museum",28.0531 N,82.4045 W
+39,6,St. Petersburg Pier,"Family, Anytime, Bars, View",27.7736 N,82.6314 W
+40,1,USF,"Walk, Daytime, Events, Food, sports",28.0587 N,28.0587 N
+41,1,Hyde Park,"Walk, Anytime, Food",27.9417 N,82.4639 W
+42,9,Castillo de San Marcos,"Daytime, Family, Historical",29.8979 N,81.3115 W
+43,9,Fountain of Youth,"Daytime, Family, Historical, Premium",29.9069 N,81.3150 W
+44,3,Magic Kingdom,"Daytime, Family, Daytrip, Premium, Disney",28.4188 N,81.5818 W
+45,3,Epcot,"Daytime, Family, Daytrip, Premium, Disney, Culture",28.3765 N,81.5494 W
+46,3,Animal Kingdom,"Daytime, Family, Daytrip, Premium, Disney, Animals",28.3574 N,81.5906 W
+47,3,Hollywood Studios,"Daytime, Family, Daytrip, Premium, Disney",28.4724 N,81.4690 W
+48,4,Tallahassee Museum ,"Museum, must-see",30.410471 N,84.344054 W
+49,4,Musuem of Florida History,Museum,30.4381 N,84.2850 W
+50,5,Sarasota Art Musuem,Museum,27.3257 N,82.5293 W
+51,7,Brevard Museum of History and Natural Science,Museum,28.388300N,80.7592W
+52,8,Key West Shipwreck Museum,Museum,24.557965N,81.806495W
+53,10,MOSH,"Museum, must-see, science",30.319525N,81.659901W
+54,11,IMAG History & Science Center,"Museum, science",26.64041N,81.85938W
+55,12,Artis,"Museum, theatre",26.2160 N,81.8038 W
+56,12,Naples botanical garden,hiking,26.1068 N,81.7711 W
