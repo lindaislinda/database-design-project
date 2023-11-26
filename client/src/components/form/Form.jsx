@@ -49,7 +49,7 @@ function Form() {
   
     try {
       // Making the first API call to get the lat-long coordinates
-      const responseCoords = await axios.get(`http://localhost:4000/api/${formData.from}/${formData.to}/${formData.days}`);
+      //const responseCoords = await axios.get(`http://localhost:4000/api/${formData.from}/${formData.to}/${formData.days}`);
       
       // Making the second API call to get the detailed trip plan
       const responsePlan = await axios.get(`http://localhost:4000/api/trip-plan/${formData.from}/${formData.to}/${formData.days}/${formData.food.join(',')}/${formData.places.join(',')}/${formData.hobbies.join(',')}/`);
@@ -57,8 +57,8 @@ function Form() {
       // On successful API calls, update the serverResponse and tripPlan in the context
       setLocationData({ 
         ...locationData, 
-        formData: formData, 
-        serverResponse: responseCoords.data,
+        // formData: formData, 
+        // serverResponse: responseCoords.data,
         tripPlan: responsePlan.data
       });
       console.log(responsePlan.data);
@@ -154,7 +154,7 @@ function Form() {
               >
                 Hobbies:
               </Typography>
-              {["Sight-seeing", "Hiking", "Reading", "Sport"].map((hobby) => (
+              {["Sight-seeing", "Hiking", "Reading", "Sports", "Shopping"].map((hobby) => (
                 <Button
                   variant={
                     formData.hobbies.includes(hobby) ? "contained" : "outlined"

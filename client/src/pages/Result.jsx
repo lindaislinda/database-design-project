@@ -10,7 +10,7 @@ function Result() {
       <div className="container">
         <div className="flex-container">
           <TextBox />
-          <Map />
+          {/* <Map /> */}
         </div>
       </div>
     </>
