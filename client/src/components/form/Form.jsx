@@ -1,14 +1,13 @@
-import React, { useState, useContext } from "react";  // <-- Added useContext here
+import React, { useState, useContext } from "react"; // <-- Added useContext here
 import { TextField, Button, Box, Typography } from "@mui/material";
-import LocationContext from "../../contexts/LocationContext";  // <-- Adjust the path based on your folder structure
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import loading from '../../assets/robload.gif'
-import "./form.css";;
-
+import LocationContext from "../../contexts/LocationContext"; // <-- Adjust the path based on your folder structure
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import loading from "../../assets/robload.gif";
+import "./form.css";
 
 function Form() {
-  const [showLoading,setShowLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false);
   const navigate = useNavigate();
   const { locationData, setLocationData } = useContext(LocationContext); // Use the context
 
@@ -41,36 +40,41 @@ function Form() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
 
     // Update formData in the context
     setLocationData({ ...locationData, formData: formData });
-    setShowLoading(true)
-  
+    setShowLoading(true);
+
     try {
       // Making the first API call to get the lat-long coordinates
       //const responseCoords = await axios.get(`http://localhost:4000/api/${formData.from}/${formData.to}/${formData.days}`);
-      
+
       // Making the second API call to get the detailed trip plan
-      const responsePlan = await axios.get(`http://localhost:4000/api/trip-plan/${formData.from}/${formData.to}/${formData.days}/${formData.food.join(',')}/${formData.places.join(',')}/${formData.hobbies.join(',')}/`);
-      
+      const responsePlan = await axios.get(
+        `http://localhost:4000/api/trip-plan/${formData.from}/${formData.to}/${
+          formData.days
+        }/${formData.food.join(",")}/${formData.places.join(
+          ","
+        )}/${formData.hobbies.join(",")}/`
+      );
+
       // On successful API calls, update the serverResponse and tripPlan in the context
-      setLocationData({ 
-        ...locationData, 
-        // formData: formData, 
+      setLocationData({
+        ...locationData,
+        // formData: formData,
         // serverResponse: responseCoords.data,
-        tripPlan: responsePlan.data
+        tripPlan: responsePlan.data,
       });
       console.log(responsePlan.data);
 
       // Navigate to /result after successful API calls and context update
-      navigate('/result');
+      navigate("/result");
     } catch (error) {
       console.error("Error fetching data from server:", error);
     }
-};
+  };
 
-  if (!showLoading){
+  if (!showLoading) {
     return (
       <>
         <div className="container-form">
@@ -108,7 +112,10 @@ function Form() {
             />
             <Box mt={2}>
               <Typography
-                sx={{ fontFamily: '"Poppins", sans-serif', marginBottom: "5px" }}
+                sx={{
+                  fontFamily: '"Poppins", sans-serif',
+                  marginBottom: "5px",
+                }}
               >
                 Food:
               </Typography>
@@ -150,81 +157,95 @@ function Form() {
             </Box>
             <Box mt={2}>
               <Typography
-                sx={{ fontFamily: '"Poppins", sans-serif', marginBottom: "5px" }}
+                sx={{
+                  fontFamily: '"Poppins", sans-serif',
+                  marginBottom: "5px",
+                }}
               >
                 Hobbies:
               </Typography>
-              {["Sight-seeing", "Hiking", "Reading", "Sports", "Shopping"].map((hobby) => (
-                <Button
-                  variant={
-                    formData.hobbies.includes(hobby) ? "contained" : "outlined"
-                  }
-                  color="primary"
-                  onClick={() => toggleSelection("hobbies", hobby)}
-                  key={hobby}
-                  sx={{
-                    borderRadius: "14px",
-                    color: formData.hobbies.includes(hobby) ? "white" : "#281e41",
-                    backgroundColor: formData.hobbies.includes(hobby)
-                      ? "#281e41"
-                      : "white",
-                    padding: "10px 20px",
-                    textDecoration: "none",
-                    border: formData.hobbies.includes(hobby) ? "none" : "solid",
-                    fontSize: "1rem",
-                    fontWeight: "lighter",
-                    fontFamily: '"Poppins", sans-serif',
-                    marginRight: "10px",
-                    "&:last-child": {
-                      marginRight: "0",
-                    },
-                  }}
-                >
-                  {hobby}
-                </Button>
-              ))}
+              {["Sight-seeing", "Hiking", "Reading", "Sports", "Shopping"].map(
+                (hobby) => (
+                  <Button
+                    variant={
+                      formData.hobbies.includes(hobby)
+                        ? "contained"
+                        : "outlined"
+                    }
+                    color="primary"
+                    onClick={() => toggleSelection("hobbies", hobby)}
+                    key={hobby}
+                    sx={{
+                      borderRadius: "14px",
+                      color: formData.hobbies.includes(hobby)
+                        ? "white"
+                        : "#281e41",
+                      backgroundColor: formData.hobbies.includes(hobby)
+                        ? "#281e41"
+                        : "white",
+                      padding: "10px 20px",
+                      textDecoration: "none",
+                      border: formData.hobbies.includes(hobby)
+                        ? "none"
+                        : "solid",
+                      fontSize: "1rem",
+                      fontWeight: "lighter",
+                      fontFamily: '"Poppins", sans-serif',
+                      marginRight: "10px",
+                      "&:last-child": {
+                        marginRight: "0",
+                      },
+                    }}
+                  >
+                    {hobby}
+                  </Button>
+                )
+              )}
             </Box>
             <Box mt={2}>
               <Typography
-                sx={{ fontFamily: '"Poppins", sans-serif', marginBottom: "5px" }}
+                sx={{
+                  fontFamily: '"Poppins", sans-serif',
+                  marginBottom: "5px",
+                }}
               >
                 Places:
               </Typography>
-              {[
-                "Museums",
-                "Theatre",
-                "Beach",
-                "Hidden Gems",
-                "Must-see Attractions",
-              ].map((place) => (
-                <Button
-                  variant={
-                    formData.places.includes(place) ? "contained" : "outlined"
-                  }
-                  color="primary"
-                  onClick={() => toggleSelection("places", place)}
-                  key={place}
-                  sx={{
-                    borderRadius: "14px",
-                    color: formData.places.includes(place) ? "white" : "#281e41",
-                    backgroundColor: formData.places.includes(place)
-                      ? "#281e41"
-                      : "white",
-                    padding: "10px 20px",
-                    textDecoration: "none",
-                    border: formData.places.includes(place) ? "none" : "solid",
-                    fontSize: "1rem",
-                    fontWeight: "lighter",
-                    fontFamily: '"Poppins", sans-serif',
-                    marginRight: "10px",
-                    "&:last-child": {
-                      marginRight: "0",
-                    },
-                  }}
-                >
-                  {place}
-                </Button>
-              ))}
+              {["Museum", "Theatre", "Beach", "Hidden Gems", "Must-see"].map(
+                (place) => (
+                  <Button
+                    variant={
+                      formData.places.includes(place) ? "contained" : "outlined"
+                    }
+                    color="primary"
+                    onClick={() => toggleSelection("places", place)}
+                    key={place}
+                    sx={{
+                      borderRadius: "14px",
+                      color: formData.places.includes(place)
+                        ? "white"
+                        : "#281e41",
+                      backgroundColor: formData.places.includes(place)
+                        ? "#281e41"
+                        : "white",
+                      padding: "10px 20px",
+                      textDecoration: "none",
+                      border: formData.places.includes(place)
+                        ? "none"
+                        : "solid",
+                      fontSize: "1rem",
+                      fontWeight: "lighter",
+                      fontFamily: '"Poppins", sans-serif',
+                      marginRight: "10px",
+                      "&:last-child": {
+                        marginRight: "0",
+                      },
+                    }}
+                  >
+                    {place}
+                  </Button>
+                )
+              )}
             </Box>
             <Box mt={2}>
               <TextField
@@ -270,9 +291,9 @@ function Form() {
   } else {
     return (
       <>
-        <img src={loading} style={{width:"100%",height:""}}></img>
+        <img src={loading} style={{ width: "100%", height: "" }}></img>
       </>
-    )
+    );
   }
 }
 

@@ -162,21 +162,23 @@ app.get(
   (req, res) => {
     const city1 = req.params.city1;
     const city2 = req.params.city2;
-    const count = req.params.count;
-    const food = req.params.food;
-    const places = req.params.places;
-    const hobbies = req.params.hobbies;
+    const count = req.params.count.toLowerCase();
+    const food = req.params.food.toLowerCase();
+    const places = req.params.places.toLowerCase();
+    const hobbies = req.params.hobbies.toLowerCase();
+    const interests = places + ',' + hobbies
     console.log("City 1:", city1);
     console.log("City 2:", city2);
     console.log("Count:", count);
     console.log("Food:", food);
     console.log("Places:", places);
     console.log("Hobbies:", hobbies);
+    console.log("Interests:", interests);
 
     ///////////////////////////////////////////////////////////////////
     // Choose cities in between based on city 1 and city 2 ////////////
     ///////////////////////////////////////////////////////////////////
-    cities = ["Tallahassee","Jacksonville", "St. Augustine", "Orlando", "Cocoa Beach", "Tampa", "St. Petersburg", "Sarasota", "Fort Myers","Naples", "Miami", "Key West"]
+    const cities = ["Tallahassee","Jacksonville", "St. Augustine", "Orlando", "Cocoa Beach", "Tampa", "St. Petersburg", "Sarasota", "Fort Myers","Naples", "Miami", "Key West"]
   
     cities_chosen = [city1]
     index_city1 = cities.indexOf(city1)
@@ -229,12 +231,112 @@ app.get(
     // and restaurants for each day ///////////////////////////////////
     ///////////////////////////////////////////////////////////////////
 
+    // Day 1: You have come to {city name}
+    // Breakfast restaurant:
+    // Place to visit in the morning: 
+    // Lunch restaurant:
+    // Place to visit in the afternoon:
+    // Dinner restaurant:
+    // Place to visit at night:
+    // Hotel:
+    console.log(cities_chosen)
+
+    let tripPlanner = []
+
+    async function fetchRestaurants(city) {
+      return new Promise((resolve, reject) => {
+        const foodsArray = food.split(',');
+    
+        const query = `
+          SELECT restaurantname
+          FROM Restaurants
+          INNER JOIN Cities ON city = cityid
+          INNER JOIN food ON cuisinetype = foodid
+          WHERE cityname = $1 AND foodname = ANY($2) LIMIT 3;
+        `;
+    
+        pool.query(query, [city, foodsArray], (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results.rows.map(result => result.restaurantname));
+          }
+        });
+      });
+    }
+
+    async function fetchPlaces(city) {
+      return new Promise((resolve, reject) => {
+        const interestsArray = interests.split(',');
+    
+        const query = `
+          SELECT placename
+          FROM placestovisit
+          INNER JOIN cities ON city = cityid
+          WHERE cityname = $1
+            AND (${interestsArray.map((_, index) => `LOWER(tags) LIKE $${index + 2}`).join(' OR ')})
+          LIMIT 3;
+        `;
+    
+        const params = [city, ...interestsArray.map(interest => `%${interest.toLowerCase()}%`)];
+    
+        pool.query(query, params, (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results.rows.map(result => result.placename));
+          }
+        });
+      });
+    }
+
+    async function generateTripPlanner() {
+      for (let i = 0; i < cities_chosen.length; i++) {
+        const city = cities_chosen[i];
+        const restaurants = await fetchRestaurants(city);
+        const places = await fetchPlaces(city);
+        console.log('Places to visit: ', places);
+        tripPlanner.push([])
+        tripPlanner[i].push(city)
+        tripPlanner[i] = tripPlanner[i].concat(restaurants)
+      }
+      
+      console.log("Actual tripPlanner = ", tripPlanner)
+    
+      // Print or use the tripPlanner array as needed
+  
+    }
+
+    generateTripPlanner();
+
+    let tripPlanner1 = [
+      ["Tampa", "Breakfast Restaurant", "Place to visit in the morning", "Lunch restaurant", "Place to visit in the afternoon", "Dinner restaurant", "Place to visit at night", "Hotel"],
+      ["St. Augustine", "Breakfast Restaurant1", "Place to visit in the morning1", "Lunch restaurant1", "Place to visit in the afternoon1", "Dinner restaurant1", "Place to visit at night1", "Hotel1"],
+      ["Jacksonville", "Breakfast Restaurant2", "Place to visit in the morning2", "Lunch restaurant2", "Place to visit in the afternoon2", "Dinner restaurant2", "Place to visit at night2", "Hotel2"],
+      ["Tallahassee", "Breakfast Restaurant3", "Place to visit in the morning3", "Lunch restaurant3", "Place to visit in the afternoon3", "Dinner restaurant3", "Place to visit at night3", "Hotel3"],
+    ]
+
+    let tripString = "";
+
+    for (let i = 0; i < tripPlanner1.length; i++) {
+      let day = tripPlanner1[i];
+      tripString += `Day ${i + 1} : You have come to ${day[0]} \n`;
+      tripString += `Breakfast restaurant: ${day[1]} \n`;
+      tripString += `Place to visit in the morning: ${day[2]} \n`;
+      tripString += `Lunch restaurant: ${day[3]} \n`;
+      tripString += `Place to visit in the afternoon: ${day[4]} \n`;
+      tripString += `Dinner restaurant: ${day[5]} \n`;
+      tripString += `Place to visit at night: ${day[6]} \n`;
+      tripString += `Hotel: ${day[7]} \n\n`;
+    }
+
+    console.log(tripString);
 
     
 
     // Example: Send a response with the values
     res.json(
-      cities_chosen.toString()
+      tripString
     );
     console.log("Cities Chosen: ", cities_chosen);
     
