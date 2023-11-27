@@ -23,11 +23,11 @@ const pool = new Pool({
   database: "usf_travel_db",
   password: "travelmlm",
   port: 5432, // default PostgreSQL port
-  ssl : {
-	  rejectUnauthorized: false,
-  }
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
-pool.connect(function(err) {
+pool.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
 });
@@ -166,7 +166,7 @@ app.get(
     const food = req.params.food.toLowerCase();
     const places = req.params.places.toLowerCase();
     const hobbies = req.params.hobbies.toLowerCase();
-    const interests = places + ',' + hobbies
+    const interests = places + "," + hobbies;
     console.log("City 1:", city1);
     console.log("City 2:", city2);
     console.log("Count:", count);
@@ -178,30 +178,43 @@ app.get(
     ///////////////////////////////////////////////////////////////////
     // Choose cities in between based on city 1 and city 2 ////////////
     ///////////////////////////////////////////////////////////////////
-    const cities = ["Tallahassee","Jacksonville", "St. Augustine", "Orlando", "Cocoa Beach", "Tampa", "St. Petersburg", "Sarasota", "Fort Myers","Naples", "Miami", "Key West"]
-  
-    cities_chosen = [city1]
-    index_city1 = cities.indexOf(city1)
-    index_city2 = cities.indexOf(city2)
-    
-    reverse = false
+    const cities = [
+      "Tallahassee",
+      "Jacksonville",
+      "St. Augustine",
+      "Orlando",
+      "Cocoa Beach",
+      "Tampa",
+      "St. Petersburg",
+      "Sarasota",
+      "Fort Myers",
+      "Naples",
+      "Miami",
+      "Key West",
+    ];
+
+    cities_chosen = [city1];
+    index_city1 = cities.indexOf(city1);
+    index_city2 = cities.indexOf(city2);
+
+    reverse = false;
 
     if (index_city1 > index_city2) {
-      start_index = index_city2
-      end_index = index_city1
-      reverse = true
+      start_index = index_city2;
+      end_index = index_city1;
+      reverse = true;
     } else {
-      start_index = index_city1
-      end_index = index_city2
+      start_index = index_city1;
+      end_index = index_city2;
     }
 
     // Extract the sublist of cities between city1 and city2
     const citiesBetween = cities.slice(start_index + 1, end_index);
 
     if (reverse) {
-      citiesBetween.reverse()
+      citiesBetween.reverse();
     }
-    console.log("Cities Between: ", citiesBetween)
+    console.log("Cities Between: ", citiesBetween);
 
     function getRandomIndices(n, length) {
       const indices = [];
@@ -212,7 +225,7 @@ app.get(
             indices.push(randomIndex);
           }
         } else {
-          indices.push(randomIndex)
+          indices.push(randomIndex);
         }
       }
       return indices.sort((a, b) => a - b);
@@ -222,31 +235,29 @@ app.get(
     const randomIndices = getRandomIndices(count - 2, citiesBetween.length);
 
     for (let i = 0; i < randomIndices.length; i++) {
-      cities_chosen.push(citiesBetween[randomIndices[i]])
+      cities_chosen.push(citiesBetween[randomIndices[i]]);
     }
-    cities_chosen.push(city2)
+    cities_chosen.push(city2);
 
     ///////////////////////////////////////////////////////////////////
-    // Do queries to find hotels, places to visit,///////////////////// 
+    // Do queries to find hotels, places to visit,/////////////////////
     // and restaurants for each day ///////////////////////////////////
     ///////////////////////////////////////////////////////////////////
 
     // Day 1: You have come to {city name}
     // Breakfast restaurant:
-    // Place to visit in the morning: 
+    // Place to visit in the morning:
     // Lunch restaurant:
     // Place to visit in the afternoon:
     // Dinner restaurant:
     // Place to visit at night:
     // Hotel:
-    console.log(cities_chosen)
-
-    let tripPlanner = []
+    console.log(cities_chosen);
 
     async function fetchRestaurants(city) {
       return new Promise((resolve, reject) => {
-        const foodsArray = food.split(',');
-    
+        const foodsArray = food.split(",");
+
         const query = `
           SELECT restaurantname
           FROM Restaurants
@@ -254,12 +265,12 @@ app.get(
           INNER JOIN food ON cuisinetype = foodid
           WHERE cityname = $1 AND foodname = ANY($2) LIMIT 3;
         `;
-    
+
         pool.query(query, [city, foodsArray], (error, results) => {
           if (error) {
             reject(error);
           } else {
-            resolve(results.rows.map(result => result.restaurantname));
+            resolve(results.rows.map((result) => result.restaurantname));
           }
         });
       });
@@ -267,79 +278,125 @@ app.get(
 
     async function fetchPlaces(city) {
       return new Promise((resolve, reject) => {
-        const interestsArray = interests.split(',');
-    
+        const interestsArray = interests.split(",");
+
         const query = `
           SELECT placename
           FROM placestovisit
           INNER JOIN cities ON city = cityid
           WHERE cityname = $1
-            AND (${interestsArray.map((_, index) => `LOWER(tags) LIKE $${index + 2}`).join(' OR ')})
+            AND (${interestsArray
+              .map((_, index) => `LOWER(tags) LIKE $${index + 2}`)
+              .join(" OR ")})
           LIMIT 3;
         `;
-    
-        const params = [city, ...interestsArray.map(interest => `%${interest.toLowerCase()}%`)];
-    
+
+        const params = [
+          city,
+          ...interestsArray.map((interest) => `%${interest.toLowerCase()}%`),
+        ];
+
         pool.query(query, params, (error, results) => {
           if (error) {
             reject(error);
           } else {
-            resolve(results.rows.map(result => result.placename));
+            resolve(results.rows.map((result) => result.placename));
           }
         });
       });
     }
 
+    async function fetchHotel(city) {
+      return new Promise((resolve, reject) => {
+        const query = `
+          SELECT hotelname
+          FROM hotels
+          INNER JOIN cities ON city = cityid
+          WHERE cityname = $1
+          LIMIT 1;
+        `;
+
+        pool.query(query, [city], (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            const hotelName =
+              results.rows.length > 0 ? results.rows[0].hotelname : null;
+            resolve(hotelName);
+          }
+        });
+      });
+    }
+
+    let tripPlanner = [];
+    let tripString = "";
     async function generateTripPlanner() {
       for (let i = 0; i < cities_chosen.length; i++) {
-        const city = cities_chosen[i];
-        const restaurants = await fetchRestaurants(city);
-        const places = await fetchPlaces(city);
-        console.log('Places to visit: ', places);
-        tripPlanner.push([])
-        tripPlanner[i].push(city)
-        tripPlanner[i] = tripPlanner[i].concat(restaurants)
-      }
-      
-      console.log("Actual tripPlanner = ", tripPlanner)
-    
-      // Print or use the tripPlanner array as needed
-  
-    }
+        let city = cities_chosen[i];
+        let restaurants = await fetchRestaurants(city);
+        let places = await fetchPlaces(city);
+        let hotel = await fetchHotel(city);
+        console.log("Places to visit: ", places);
+        console.log("Hotel: ", hotel);
 
+        if (restaurants.length == 2) {
+          restaurants.push("Celestial Savor Spot");
+        } else if (restaurants.length == 1) {
+          restaurants.push("Whimsical Palate Pavilion");
+          restaurants.push("Nebula Nosh House");
+        } else if (restaurants.length == 0) {
+          restaurants = [
+            "Stellar Bites Cafe",
+            "Enchanted Eats Emporium",
+            "Quantum Flavor Junction",
+          ];
+        }
+
+        if (places.length == 2) {
+          places.push("Serene Haven Retreat");
+        } else if (places.length == 1) {
+          places.push(city.concat(" Zoo"));
+          places.push("Tranquil Haven Valley");
+        } else if (places.length == 0) {
+          let city_park = city.concat(" Park");
+          let city_museum = city.concat(" Museum");
+          let city_zoo = city.concat(" Zoo");
+          places = [city_park, city_museum, city_zoo];
+        }
+
+        if (hotel.length == 0) {
+          hotel.push("Vivid Vista Inn");
+        }
+
+        tripPlanner.push([]);
+        tripPlanner[i].push(city);
+        tripPlanner[i] = tripPlanner[i].concat(restaurants);
+        tripPlanner[i] = tripPlanner[i].concat(places);
+        tripPlanner[i] = tripPlanner[i].concat(hotel);
+      }
+
+      console.log("Inside-function tripPlanner = ", tripPlanner)
+
+      tripString += `Your ${count}-day trip from ${city1} to ${city2}:\n\n`
+      for (let i = 0; i < tripPlanner.length; i++) {
+        let day = tripPlanner[i];
+        tripString += `Day ${i + 1} : You have come to ${day[0]} \n`;
+        tripString += `Breakfast restaurant: ${day[1]} \n`;
+        tripString += `Place to visit in the morning: ${day[4]} \n`;
+        tripString += `Lunch restaurant: ${day[2]} \n`;
+        tripString += `Place to visit in the afternoon: ${day[5]} \n`;
+        tripString += `Dinner restaurant: ${day[3]} \n`;
+        tripString += `Place to visit at night: ${day[6]} \n`;
+        tripString += `Hotel: ${day[7]} \n\n`;
+      }
+
+      res.json(tripString);
+
+      // Print or use the tripPlanner array as needed
+    }
     generateTripPlanner();
 
-    let tripPlanner1 = [
-      ["Tampa", "Breakfast Restaurant", "Place to visit in the morning", "Lunch restaurant", "Place to visit in the afternoon", "Dinner restaurant", "Place to visit at night", "Hotel"],
-      ["St. Augustine", "Breakfast Restaurant1", "Place to visit in the morning1", "Lunch restaurant1", "Place to visit in the afternoon1", "Dinner restaurant1", "Place to visit at night1", "Hotel1"],
-      ["Jacksonville", "Breakfast Restaurant2", "Place to visit in the morning2", "Lunch restaurant2", "Place to visit in the afternoon2", "Dinner restaurant2", "Place to visit at night2", "Hotel2"],
-      ["Tallahassee", "Breakfast Restaurant3", "Place to visit in the morning3", "Lunch restaurant3", "Place to visit in the afternoon3", "Dinner restaurant3", "Place to visit at night3", "Hotel3"],
-    ]
-
-    let tripString = "";
-
-    for (let i = 0; i < tripPlanner1.length; i++) {
-      let day = tripPlanner1[i];
-      tripString += `Day ${i + 1} : You have come to ${day[0]} \n`;
-      tripString += `Breakfast restaurant: ${day[1]} \n`;
-      tripString += `Place to visit in the morning: ${day[2]} \n`;
-      tripString += `Lunch restaurant: ${day[3]} \n`;
-      tripString += `Place to visit in the afternoon: ${day[4]} \n`;
-      tripString += `Dinner restaurant: ${day[5]} \n`;
-      tripString += `Place to visit at night: ${day[6]} \n`;
-      tripString += `Hotel: ${day[7]} \n\n`;
-    }
-
-    console.log(tripString);
-
-    
-
-    // Example: Send a response with the values
-    res.json(
-      tripString
-    );
     console.log("Cities Chosen: ", cities_chosen);
-    
   }
 );
 

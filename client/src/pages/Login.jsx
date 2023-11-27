@@ -63,10 +63,11 @@ export default function SignIn() {
         }),
       });
       console.log("Response:", response);
-      
-      navigate("/preferences");
+
+      // navigate("/preferences");
       if (response.ok) {
         sessionStorage.setItem("userEmail", formData.get("email"));
+        console.log("Response is ok!");
         navigate("/preferences");
       } else {
         console.error("Login failed:", response.statusText);
