@@ -8,13 +8,18 @@ function Home() {
       <div className="container container-grid">
         {/* Col 1 */}
         <div>
-          <h1>Let AI design your road trip!</h1>
+          <h1>Let Data design your road trip!</h1>
           <p>
-            Transform your road trips with AI magic. Crafted routes. Curated
+            Transform your road trips with Data magic. Crafted routes. Curated
             experiences. Crystal-clear adventures.
           </p>
           <a href="/login" className="btn">
             Start the magic!
+          </a>
+          <br />
+          <br />
+          <a href="/contribute" className="btn">
+            Contribute
           </a>
         </div>
         {/* Col 2 */}

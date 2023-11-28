@@ -157,6 +157,126 @@ app.post("/login", async (req, res) => {
 //   }
 // );
 
+app.post(
+  "/add/restaurants/:city/:name/:cuisine/:meal/:lat/:lon",
+  (req, res) => {
+    let city = req.params.city
+    let restaurantName = req.params.name
+    let cuisineType = req.params.cuisine
+    let mealType = req.params.meal
+    let lat = req.params.lat
+    let lon = req.params.lon
+    console.log(restaurantName)
+    const query = 
+      `WITH newID AS (
+        SELECT MAX(restaurantid) + 1 AS id 
+            FROM restaurants
+        ), newCityID AS (
+            SELECT cityid AS cityToAdd 
+                FROM cities 
+                WHERE LOWER(cityname) = LOWER($1)
+        ), newCuisineType AS (
+            SELECT foodid AS foodToAdd 
+                FROM food 
+                WHERE LOWER(foodname) = LOWER($3)
+        ) INSERT INTO restaurants (restaurantid, city, restaurantname, mealtype, latitude, longitude, cuisinetype) 
+            SELECT newID.id, newCityID.cityToAdd, $2 , $4, $5, $6, newCuisineType.foodToAdd 
+                FROM newID, newCityID, newCuisineType;
+      `
+    pool.query(query, [city, restaurantName, cuisineType, mealType, lat, lon], (error, result) => {
+      if (error) {
+        console.error('Error executing query:', error);
+        // Handle the error, for example, by sending an error response
+      } else {
+        console.log('Query executed successfully');
+        // Access the result object if needed
+        console.log('Inserted rows:', result.rowCount);
+        // Additional logic based on the result if necessary
+      }
+    })
+  }
+) 
+
+app.post(
+  "/add/hotels/:city/:name/:price/:lat/:lon",
+  (req, res) => {
+    let city = req.params.city
+    let hotelName = req.params.name
+    let priceRange = req.params.price
+    let lat = req.params.lat
+    let lon = req.params.lon
+    console.log(hotelName)
+    const query = `
+    WITH newID 
+    AS 
+      (
+        SELECT MAX(hotelid) + 1 AS id 
+          FROM hotels
+      ), 
+    newCityID 
+    AS 
+      (
+        SELECT cityid AS cityToAdd 
+          FROM cities 
+          WHERE LOWER(cityname) = LOWER($1)
+      ) 
+    INSERT INTO hotels (hotelid, city, hotelname, pricerange, latitude, longitude) 
+      SELECT newID.id, newCityID.cityToAdd, $2, $3, $4, $5 FROM newID, newCityID;
+    `
+    pool.query(query, [city, hotelName, priceRange, lat, lon], (error, result) => {
+      if (error) {
+        console.error('Error executing query:', error);
+        // Handle the error, for example, by sending an error response
+      } else {
+        console.log('Query executed successfully');
+        // Access the result object if needed
+        console.log('Inserted rows:', result.rowCount);
+        // Additional logic based on the result if necessary
+      }
+    })
+  }
+)
+
+app.post(
+  "/add/places/:city/:name/:tag/:lat/:lon",
+  (req, res) => {
+    let city = req.params.city
+    let placeName = req.params.name
+    let tag = req.params.tag
+    let lat = req.params.lat
+    let lon = req.params.lon
+    console.log(placeName)
+    const query = ` 
+    WITH newID 
+    AS 
+      (
+        SELECT MAX(placeid) + 1 AS id 
+          FROM placestovisit
+      ), 
+    newCityID
+    AS 
+      (
+        SELECT cityid AS cityToAdd 
+          FROM cities 
+          WHERE LOWER(cityname) = LOWER($1)
+      ) 
+    INSERT INTO placestovisit (placeid, city, placename, tags, latitude, longitude) 
+      SELECT newID.id, newCityID.cityToAdd, $2, $3, $4, $5 FROM newID, newCityID;
+    `
+    pool.query(query, [city, placeName, tag, lat, lon], (error, result) => {
+      if (error) {
+        console.error('Error executing query:', error);
+        // Handle the error, for example, by sending an error response
+      } else {
+        console.log('Query executed successfully');
+        // Access the result object if needed
+        console.log('Inserted rows:', result.rowCount);
+        // Additional logic based on the result if necessary
+      }
+    })
+  }
+)
+
 app.get(
   "/api/trip-plan/:city1/:city2/:count/:food/:places/:hobbies/",
   (req, res) => {
@@ -391,8 +511,7 @@ app.get(
       }
 
       res.json(tripString);
-
-      // Print or use the tripPlanner array as needed
+        
     }
     generateTripPlanner();
 

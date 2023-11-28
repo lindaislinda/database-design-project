@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react"; // <-- Added useContext here
 import { TextField, Button, Box, Typography } from "@mui/material";
-import LocationContext from "../../contexts/LocationContext"; // <-- Adjust the path based on your folder structure
+import LocationContext from "../../contexts/LocationContext"; // 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import loading from "../../assets/robload.gif";

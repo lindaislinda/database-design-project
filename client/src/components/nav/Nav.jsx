@@ -30,7 +30,7 @@ function Nav() {
       <header>
           <nav className="navbar">
               <div className="container">
-                  <a className="navbar-brand" href="/">AI•NomadNavigator</a>
+                  <a className="navbar-brand" href="/">NomadNavigator</a>
                   {/* <button className="navbar-toggler" onClick={toggleNavbar}>☰</button> */}
                   <ul className="navbar-nav">
                       { (isAuthenticated || userEmail) ? (
