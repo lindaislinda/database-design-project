@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './hotelForm.css'
+import Nav from "../nav/Nav";
+import "./hotelForm.css";
 
 const HotelForm = () => {
   const [city, setCity] = useState("");
@@ -28,16 +29,17 @@ const HotelForm = () => {
       // Send a POST request to the server
       const response = await axios.post(url);
 
-      // Handle the response 
+      // Handle the response
       console.log("Hotel added successfully:", response.data);
     } catch (error) {
-      // Handle errors 
+      // Handle errors
       console.error("Error adding hotel:", error.message);
     }
   };
 
   return (
     <>
+      <Nav />
       <div className="container">
         <div className="container-form">
           <h2>Add a Hotel</h2>
@@ -107,6 +109,6 @@ const HotelForm = () => {
       </div>
     </>
   );
-}
+};
 
-export default HotelForm
+export default HotelForm;
