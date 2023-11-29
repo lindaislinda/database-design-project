@@ -1,0 +1,21 @@
+CREATE OR REPLACE FUNCTION check_latlong() RETURNS TRIGGER AS $latlong$
+DECLARE varlat FLOAT;
+DECLARE varlong FLOAT;
+BEGIN
+	select cast(substring(NEW.latitude,1,length(NEW.latitude)-1) as float) into varlat;
+	select cast(substring(NEW.longitude,1,length(NEW.longitude)-1) as float) into varlong;
+	IF varlat<-90 OR varlat>90 THEN
+		RAISE EXCEPTION 'Please enter a latitude value between 90 to -90 !';
+	END IF;
+	IF varlong<-180 OR varlong>180 THEN
+		RAISE EXCEPTION 'Please enter a longitude value between 180 to -180 !';
+	END IF;
+	RETURN NEW;
+END;
+$latlong$ LANGUAGE PLPGSQL;
+
+
+CREATE TRIGGER nonval_latLong
+BEFORE INSERT OR UPDATE OF latitude on placestovisit
+FOR EACH ROW
+EXECUTE PROCEDURE check_latlong();
