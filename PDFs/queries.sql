@@ -1,0 +1,8 @@
+SELECT restaurantname FROM Restaurants INNER JOIN Cities ON city = cityid INNER JOIN food ON cuisinetype = foodid WHERE cityname = $1 AND foodname = ANY($2) LIMIT 3;
+SELECT placename FROM placestovisit INNER JOIN cities ON city = cityid WHERE cityname = $1 AND (${interestsArray .map((_, index) => `LOWER(tags) LIKE $${index + 2}`) .join(" OR ") } ) LIMIT 3;
+SELECT hotelname FROM hotels INNER JOIN cities ON city = cityid WHERE cityname = $1 LIMIT 1;
+WITH newID AS (SELECT MAX(restaurantid) + 1 AS id FROM restaurants), newCityID AS (SELECT cityid AS cityToAdd FROM cities WHERE LOWER(cityname) = LOWER($1)), newCuisineType AS (SELECT foodid AS foodToAdd FROM food WHERE LOWER(foodname) = LOWER($3)) INSERT INTO restaurants (restaurantid, city, restaurantname, mealtype, latitude, longitude, cuisinetype) SELECT newID.id, newCityID.cityToAdd, $2 , $4, $5, $6, newCuisineType.foodToAdd FROM newID, newCityID, newCuisineType;
+WITH newID AS (SELECT MAX(hotelid) + 1 AS id FROM hotels), newCityID AS (SELECT cityid AS cityToAdd FROM cities WHERE LOWER(cityname) = LOWER($1)) INSERT INTO hotels (hotelid, city, hotelname, pricerange, latitude, longitude) SELECT newID.id, newCityID.cityToAdd, $2, $3, $4, $5 FROM newID, newCityID;
+WITH newID AS (SELECT MAX(placeid) + 1 AS id FROM placestovisit), newCityID AS (SELECT cityid AS cityToAdd FROM cities WHERE LOWER(cityname) = LOWER($1)) INSERT INTO placestovisit (placeid, city, placename, tags, latitude, longitude) SELECT newID.id, newCityID.cityToAdd, $2, $3, $4, $5 FROM newID, newCityID;
+SELECT MAX(userid) FROM users;
+INSERT INTO users (userid, username, email, password) VALUES ($1, $2, $3, $4);
